@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestión de Riesgos y Oportunidades SIG · PBI & Nikoil Energy</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0C1B2E;--ink2:#152A45;--ink3:#1E3A5F;
+  --teal:#0891B2;--teal-l:#06B6D4;
+  --amber:#F59E0B;--amber-l:#FCD34D;
+  --green:#059669;--red:#DC2626;--purple:#7C3AED;
+  --slate:#94A3B8;--light:#E2EEF7;--white:#FFFFFF;
+  --font:'Outfit',sans-serif;--font2:'Fraunces',serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--ink);color:var(--white);overflow-x:hidden;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(8,145,178,0.07) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(245,158,11,0.05) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* HEADER */
+header{position:sticky;top:0;z-index:200;background:rgba(12,27,46,0.95);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.08);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-pill{background:var(--amber);color:var(--ink);font-weight:800;font-size:11px;padding:4px 10px;border-radius:4px;letter-spacing:1px}
+.logo-name{font-size:13px;color:var(--slate);font-weight:500}
+.htags{display:flex;gap:5px;flex-wrap:wrap}
+.htag{font-size:9px;padding:3px 7px;border-radius:20px;border:1px solid rgba(8,145,178,0.4);color:var(--teal-l);font-weight:600;letter-spacing:.5px}
+
+/* PROGRESS */
+#pbar-wrap{height:3px;background:rgba(255,255,255,0.05);position:sticky;top:62px;z-index:199}
+#pbar{height:3px;background:linear-gradient(90deg,var(--teal),var(--amber));width:0%;transition:width .6s ease;position:relative}
+#pbar::after{content:'';position:absolute;right:-5px;top:-4px;width:11px;height:11px;border-radius:50%;background:var(--amber);box-shadow:0 0 10px var(--amber)}
+
+/* SCREENS */
+.screen{display:none;position:relative;z-index:1;animation:rise .45s ease forwards}
+.screen.on{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:840px;margin:0 auto;padding:44px 20px 90px}
+
+/* COVER */
+.cover-hero{background:linear-gradient(135deg,rgba(21,42,69,0.97),rgba(30,58,95,0.85));border:1px solid rgba(8,145,178,0.22);border-radius:22px;padding:48px 44px;position:relative;overflow:hidden;margin-bottom:24px}
+.cover-hero::before{content:'🛢️';font-size:180px;position:absolute;right:-10px;top:-20px;opacity:.04;line-height:1;pointer-events:none}
+.tag-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.tag{font-size:10px;font-weight:700;letter-spacing:1.5px;padding:4px 12px;border-radius:20px;text-transform:uppercase}
+.tag-t{background:rgba(8,145,178,0.2);border:1px solid var(--teal);color:var(--teal-l)}
+.tag-a{background:rgba(245,158,11,0.2);border:1px solid var(--amber);color:var(--amber-l)}
+.tag-g{background:rgba(5,150,105,0.2);border:1px solid var(--green);color:#6EE7B7}
+h1.ct{font-family:var(--font2);font-weight:300;font-size:clamp(28px,5.5vw,52px);line-height:1.1;margin-bottom:6px}
+h1.ct em{font-style:italic;color:var(--amber)}
+.cover-sub{font-size:15px;color:var(--slate);font-weight:300;margin-bottom:30px;line-height:1.6}
+.meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+.meta-card{background:rgba(0,0,0,0.22);border-radius:10px;padding:13px 15px}
+.meta-icon{font-size:18px;margin-bottom:3px}
+.meta-lbl{font-size:10px;color:var(--slate);letter-spacing:1px;text-transform:uppercase}
+.meta-val{font-size:13px;font-weight:600;color:var(--light);margin-top:2px}
+.input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg label{font-size:10px;color:var(--slate);letter-spacing:1px;font-weight:600;text-transform:uppercase}
+.inp{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:10px;padding:12px 15px;color:var(--white);font-family:var(--font);font-size:14px;transition:border .2s,box-shadow .2s;width:100%}
+.inp:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(8,145,178,0.14)}
+.inp::placeholder{color:rgba(255,255,255,0.22)}
+.btn-start{background:linear-gradient(135deg,var(--amber),#F97316);color:var(--ink);font-family:var(--font);font-weight:800;font-size:15px;border:none;border-radius:12px;padding:17px 44px;cursor:pointer;transition:all .2s;box-shadow:0 6px 28px rgba(245,158,11,0.32);letter-spacing:.4px;display:inline-flex;align-items:center;gap:9px;margin-top:16px}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(245,158,11,0.46)}
+
+/* OBJ CARD */
+.obj-card{background:rgba(21,42,69,0.7);border:1px solid rgba(8,145,178,0.18);border-radius:18px;padding:26px 28px}
+.obj-title{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--teal-l);text-transform:uppercase;margin-bottom:14px}
+.obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.obj-item{display:flex;align-items:flex-start;gap:9px;background:rgba(0,0,0,0.2);border-radius:9px;padding:11px;font-size:13px;color:var(--light);line-height:1.5}
+.obj-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0;margin-top:5px}
+
+/* MODULE HEADER */
+.mod-header{display:flex;align-items:stretch;margin-bottom:26px;background:rgba(21,42,69,0.6);border-radius:14px;overflow:hidden;border:1px solid rgba(8,145,178,0.18)}
+.mod-num-box{background:var(--teal);padding:18px 22px;font-size:28px;font-weight:900;color:white;display:flex;align-items:center;justify-content:center;min-width:68px;flex-shrink:0}
+.mod-info{padding:15px 22px}
+.mod-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--teal-l);text-transform:uppercase;margin-bottom:3px}
+.mod-title-text{font-size:19px;font-weight:700;color:var(--white)}
+.mod-code-text{font-size:11px;color:var(--slate);margin-top:2px}
+
+/* CONTENT BLOCKS */
+.dyk{background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.04));border:1px solid rgba(245,158,11,0.3);border-left:4px solid var(--amber);border-radius:0 12px 12px 0;padding:16px 18px;display:flex;gap:12px;align-items:flex-start;margin-bottom:18px}
+.dyk-icon{font-size:22px;flex-shrink:0}
+.dyk-text{font-size:14px;color:var(--light);line-height:1.7}
+.dyk-text strong{color:var(--amber-l)}
+
+.ex-box{background:rgba(5,150,105,0.08);border:1px solid rgba(5,150,105,0.28);border-radius:13px;padding:18px 20px;margin-bottom:18px}
+.ex-title{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#6EE7B7;text-transform:uppercase;margin-bottom:8px}
+.ex-text{font-size:14px;color:var(--light);line-height:1.7}
+
+.opp-box{background:rgba(124,58,237,0.08);border:1px solid rgba(124,58,237,0.3);border-radius:13px;padding:18px 20px;margin-bottom:18px}
+.opp-title{font-size:10px;font-weight:700;letter-spacing:1.5px;color:#C4B5FD;text-transform:uppercase;margin-bottom:8px}
+.opp-text{font-size:14px;color:var(--light);line-height:1.7}
+
+.cc-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px}
+.cc{background:rgba(0,0,0,0.28);border-radius:13px;padding:16px;border-top:3px solid var(--teal);transition:transform .2s}
+.cc:hover{transform:translateY(-3px)}
+.cc.a{border-top-color:var(--amber)}.cc.g{border-top-color:var(--green)}.cc.r{border-top-color:var(--red)}.cc.p{border-top-color:var(--purple)}
+.cc-icon{font-size:26px;margin-bottom:7px}
+.cc-title{font-weight:700;font-size:14px;margin-bottom:5px}
+.cc-text{font-size:12px;color:var(--slate);line-height:1.6}
+
+/* STEPS */
+.steps{display:flex;flex-direction:column;margin-bottom:18px}
+.step-row{display:flex;gap:0}
+.step-line{width:38px;flex-shrink:0;display:flex;flex-direction:column;align-items:center}
+.step-circle{width:34px;height:34px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex-shrink:0}
+.step-vline{width:2px;background:rgba(8,145,178,0.18);flex:1;min-height:14px}
+.step-content{padding:0 0 22px 14px;flex:1}
+.step-content h5{font-size:15px;font-weight:700;margin-bottom:3px}
+.step-content p{font-size:13px;color:var(--slate);line-height:1.6}
+.step-resp{display:inline-block;margin-top:5px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(245,158,11,0.13);border:1px solid rgba(245,158,11,0.28);color:var(--amber-l)}
+
+/* MATRIX */
+.mx-wrap{overflow-x:auto;margin:16px 0}
+.mx-table{border-collapse:collapse;width:100%;font-size:12px;min-width:480px}
+.mx-table th{background:rgba(0,0,0,0.3);color:var(--slate);font-weight:700;font-size:10px;text-transform:uppercase;padding:9px 11px;text-align:center}
+.mx-table td{padding:8px 11px;text-align:center;font-weight:700;border:1px solid rgba(255,255,255,0.04)}
+.c-baja{background:#064E3B;color:#6EE7B7}.c-mod{background:#78350F;color:#FCD34D}.c-alta{background:#7C2D12;color:#FCA5A5}.c-ext{background:#450A0A;color:#FCA5A5;animation:pr 2s infinite}
+@keyframes pr{0%,100%{background:#450A0A}50%{background:#7F1D1D}}
+
+/* DOFA */
+.dofa-wrap{display:grid;grid-template-columns:1fr 1fr;gap:3px;margin:18px 0;border-radius:12px;overflow:hidden}
+.dofa-cell{padding:18px}
+.dofa-D{background:rgba(220,38,38,0.13);border:1px solid rgba(220,38,38,0.28)}
+.dofa-O{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.28)}
+.dofa-F{background:rgba(5,150,105,0.13);border:1px solid rgba(5,150,105,0.28)}
+.dofa-A{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.28)}
+.dofa-cell h4{font-size:11px;font-weight:800;letter-spacing:1px;margin-bottom:7px;text-transform:uppercase}
+.dofa-D h4{color:#FCA5A5}.dofa-O h4{color:var(--amber-l)}.dofa-F h4{color:#6EE7B7}.dofa-A h4{color:#A5B4FC}
+.dofa-cell ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.dofa-cell ul li{font-size:12px;color:var(--light);padding-left:10px;position:relative;line-height:1.4}
+.dofa-cell ul li::before{content:'▸';position:absolute;left:0;font-size:9px}
+
+/* OPP vs RISK comparison */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.compare-card{border-radius:14px;padding:20px}
+.compare-card.risk{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3)}
+.compare-card.opp{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3)}
+.compare-card h3{font-size:15px;font-weight:800;margin-bottom:4px}
+.compare-card.risk h3{color:#FCA5A5}.compare-card.opp h3{color:#C4B5FD}
+.compare-card p{font-size:12px;color:var(--slate);line-height:1.6;margin-bottom:10px}
+.compare-card ul{list-style:none;display:flex;flex-direction:column;gap:4px}
+.compare-card ul li{font-size:12px;color:var(--light);padding-left:10px;position:relative;line-height:1.4}
+.compare-card ul li::before{content:'▸';position:absolute;left:0;font-size:9px}
+
+/* REGISTERS */
+.reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:18px}
+.reg-item{background:rgba(0,0,0,0.22);border-radius:9px;padding:10px 13px;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--light)}
+.reg-code{background:rgba(8,145,178,0.18);border:1px solid rgba(8,145,178,0.38);color:var(--teal-l);font-size:9px;font-weight:800;padding:3px 7px;border-radius:5px;white-space:nowrap;letter-spacing:.5px;flex-shrink:0}
+
+/* MINI QUIZ */
+.mini-quiz{background:rgba(8,145,178,0.07);border:1px solid rgba(8,145,178,0.22);border-radius:15px;padding:22px;margin:22px 0}
+.mini-quiz-title{font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--teal-l);text-transform:uppercase;margin-bottom:12px}
+.mini-q{font-size:15px;color:var(--light);font-weight:600;margin-bottom:13px;line-height:1.5}
+.mini-opts{display:flex;flex-direction:column;gap:7px}
+.mini-opt{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:9px;padding:12px 15px;cursor:pointer;font-size:13px;color:var(--light);transition:all .2s;font-family:var(--font);width:100%;text-align:left}
+.mini-opt:hover:not(:disabled){background:rgba(8,145,178,0.13);border-color:rgba(8,145,178,0.4)}
+.mini-opt.win{background:rgba(5,150,105,0.2);border-color:var(--green);color:#A7F3D0}
+.mini-opt.fail{background:rgba(220,38,38,0.15);border-color:var(--red);color:#FCA5A5}
+.mini-opt:disabled{cursor:not-allowed}
+.mini-fb{font-size:13px;line-height:1.65;padding:12px;border-radius:9px;margin-top:10px;display:none}
+.mini-fb.show{display:block}
+.mini-fb.ok{background:rgba(5,150,105,0.12);border:1px solid rgba(5,150,105,0.3);color:#A7F3D0}
+.mini-fb.no{background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.28);color:#FCA5A5}
+
+/* NAV BUTTONS */
+.nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:32px;gap:10px}
+.btn{font-family:var(--font);font-weight:700;font-size:14px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;padding:13px 26px;display:flex;align-items:center;gap:7px;letter-spacing:.3px}
+.btn-ghost{background:rgba(255,255,255,0.05);color:var(--slate);border:1px solid rgba(255,255,255,0.11)}
+.btn-ghost:hover{background:rgba(255,255,255,0.09);color:var(--white)}
+.btn-teal{background:var(--teal);color:white;box-shadow:0 4px 18px rgba(8,145,178,0.28)}
+.btn-teal:hover{background:var(--teal-l);transform:translateY(-2px)}
+.btn-amber{background:linear-gradient(135deg,var(--amber),#F97316);color:var(--ink);box-shadow:0 4px 18px rgba(245,158,11,0.28)}
+.btn-amber:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(245,158,11,0.4)}
+
+/* EVAL */
+.eval-hero{background:linear-gradient(135deg,rgba(21,42,69,0.9),rgba(12,27,46,0.96));border:1px solid rgba(245,158,11,0.28);border-radius:18px;padding:32px;text-align:center;margin-bottom:28px}
+.eval-hero h2{font-family:var(--font2);font-weight:300;font-size:34px;margin-bottom:7px}
+.eval-hero p{color:var(--slate);font-size:14px;line-height:1.6;max-width:480px;margin:0 auto 18px}
+.eval-stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.eval-stat{background:rgba(245,158,11,0.09);border:1px solid rgba(245,158,11,0.22);border-radius:11px;padding:13px 22px;text-align:center}
+.eval-stat-n{font-size:26px;font-weight:900;color:var(--amber)}
+.eval-stat-l{font-size:10px;color:var(--slate);margin-top:2px}
+
+/* QUESTION CARD */
+.qcard{background:rgba(21,42,69,0.68);border:1px solid rgba(255,255,255,0.07);border-radius:15px;padding:26px;margin-bottom:18px;position:relative}
+.qcard::before{content:attr(data-n);position:absolute;top:-11px;left:18px;background:var(--teal);color:white;font-weight:800;font-size:10px;letter-spacing:1px;padding:4px 13px;border-radius:20px}
+.q-ref{display:inline-block;background:rgba(8,145,178,0.09);border:1px solid rgba(8,145,178,0.22);color:var(--teal-l);font-size:10px;font-weight:600;padding:3px 11px;border-radius:5px;margin-bottom:11px}
+.q-text{font-size:15px;color:var(--light);line-height:1.65;margin-bottom:16px;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:7px}
+/* ─── FIX: opciones bloqueadas al seleccionar ─── */
+.opt{display:flex;align-items:flex-start;gap:11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:9px;padding:13px 15px;cursor:pointer;font-size:14px;color:var(--light);transition:all .2s;font-family:var(--font);width:100%;text-align:left}
+.opt:hover:not(.locked){background:rgba(8,145,178,0.11);border-color:rgba(8,145,178,0.38)}
+.opt.locked{cursor:not-allowed;pointer-events:none}
+.opt.sel{background:rgba(8,145,178,0.17);border-color:var(--teal)}
+.opt.ok{background:rgba(5,150,105,0.17);border-color:var(--green);color:#A7F3D0}
+.opt.bad{background:rgba(220,38,38,0.14);border-color:var(--red);color:#FCA5A5}
+.opt-circle{width:19px;height:19px;border-radius:50%;border:2px solid rgba(255,255,255,0.22);flex-shrink:0;margin-top:1px;transition:all .2s;display:flex;align-items:center;justify-content:center;font-size:10px}
+.opt.sel .opt-circle{border-color:var(--teal);background:var(--teal)}
+.opt.ok .opt-circle{border-color:var(--green);background:var(--green)}
+.opt.bad .opt-circle{border-color:var(--red);background:var(--red)}
+.q-feedback{margin-top:12px;padding:13px;border-radius:9px;font-size:13px;line-height:1.65;display:none}
+.q-feedback.show{display:block}
+.q-feedback.ok{background:rgba(5,150,105,0.11);border:1px solid rgba(5,150,105,0.3);color:#A7F3D0}
+.q-feedback.bad{background:rgba(220,38,38,0.09);border:1px solid rgba(220,38,38,0.28);color:#FCA5A5}
+
+.btn-submit{width:100%;background:linear-gradient(135deg,var(--amber),#F97316);color:var(--ink);font-family:var(--font);font-weight:800;font-size:16px;border:none;border-radius:13px;padding:19px;cursor:pointer;margin-top:18px;transition:all .2s;box-shadow:0 6px 28px rgba(245,158,11,0.28)}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(245,158,11,0.4)}
+.btn-submit:disabled{opacity:.33;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* RESULT */
+.result-center{text-align:center;padding:16px 0}
+.score-ring{width:170px;height:170px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 28px;position:relative}
+.score-ring.pass{background:rgba(5,150,105,0.11);border:3px solid var(--green)}
+.score-ring.pass::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:3px solid transparent;border-top-color:var(--green);animation:spin 4s linear infinite}
+.score-ring.fail{background:rgba(220,38,38,0.11);border:3px solid var(--red)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.score-n{font-size:54px;font-weight:900;line-height:1}
+.score-ring.pass .score-n{color:#6EE7B7}.score-ring.fail .score-n{color:#FCA5A5}
+.score-lbl{font-size:11px;color:var(--slate);margin-top:3px}
+.result-title{font-family:var(--font2);font-size:30px;font-weight:300;margin-bottom:9px}
+.result-title.pass{color:#6EE7B7}.result-title.fail{color:#FCA5A5}
+.result-msg{font-size:14px;color:var(--slate);line-height:1.7;max-width:520px;margin:0 auto 28px}
+
+/* CERT FORM */
+.cert-form-wrap{background:rgba(21,42,69,0.8);border:1px solid rgba(8,145,178,0.22);border-radius:18px;padding:28px;max-width:500px;margin:0 auto 20px;text-align:left}
+.cert-form-wrap h3{font-size:12px;font-weight:700;letter-spacing:1.5px;color:var(--teal-l);text-transform:uppercase;margin-bottom:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.fg2{display:flex;flex-direction:column;gap:5px}
+.fg2 label{font-size:10px;color:var(--slate);letter-spacing:1px;font-weight:600;text-transform:uppercase}
+.fg2 input,.fg2 select{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.13);border-radius:9px;padding:11px 13px;color:var(--white);font-family:var(--font);font-size:14px;transition:border .2s;width:100%}
+.fg2 input:focus,.fg2 select:focus{outline:none;border-color:var(--teal)}
+.fg2 select option{background:var(--ink2)}
+
+.btn-cert{width:100%;background:linear-gradient(135deg,var(--green),#047857);color:white;font-family:var(--font);font-weight:800;font-size:15px;border:none;border-radius:11px;padding:16px;cursor:pointer;transition:all .2s;box-shadow:0 5px 20px rgba(5,150,105,0.28);display:flex;align-items:center;justify-content:center;gap:9px}
+.btn-cert:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 9px 28px rgba(5,150,105,0.38)}
+.btn-cert:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+.status-box{margin-top:13px;padding:14px 16px;border-radius:10px;font-size:13px;text-align:center;display:none;line-height:1.6}
+.status-box.show{display:block}
+.status-box.ok{background:rgba(5,150,105,0.13);border:1px solid var(--green);color:#A7F3D0}
+.status-box.err{background:rgba(220,38,38,0.1);border:1px solid var(--red);color:#FCA5A5}
+.status-box.loading{background:rgba(8,145,178,0.11);border:1px solid var(--teal);color:var(--teal-l)}
+
+.btn-retry{background:transparent;border:1px solid rgba(255,255,255,0.18);color:var(--slate);font-family:var(--font);font-weight:600;font-size:14px;padding:12px 26px;border-radius:10px;cursor:pointer;transition:all .2s;margin-top:10px}
+.btn-retry:hover{border-color:var(--amber);color:var(--amber)}
+
+/* SPINNER */
+.spin{width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.spin.on{display:inline-block}
+
+@media(max-width:620px){
+  .meta-grid,.obj-grid,.cc-grid,.reg-grid,.form-grid,.input-row,.compare-grid,.dofa-wrap{grid-template-columns:1fr}
+  main{padding:28px 14px 70px}
+  .cover-hero{padding:28px 20px}
+}
+
+  /* ── VIDEO INTRO ── */
+  .video-intro {
+    margin: 20px 0 18px 0;
+  }
+  .video-intro-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #94A3B8;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* 16:9 */
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0a1628;
+    border: 1px solid rgba(8,145,178,0.3);
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-pill">PBI · NIKOIL</span>
+    <span class="logo-name">Sistema Integrado de Gestión</span>
+  </div>
+  <div class="htags">
+    <span class="htag">ISO 9001</span><span class="htag">14001</span><span class="htag">45001</span><span class="htag">NORSOK</span>
+  </div>
+</header>
+<div id="pbar-wrap"><div id="pbar"></div></div>
+
+<main>
+
+<!-- ══ S0: PORTADA ══ -->
+<div class="screen on" id="s0">
+  <div class="cover-hero">
+    <div class="tag-row">
+      <span class="tag tag-t">SIG · HSEQ</span>
+      <span class="tag tag-a">Oil & Gas</span>
+      
+    </div>
+    <h1 class="ct">Gestión de Riesgos<br>y <em>Oportunidades</em></h1>
+    <p class="cover-sub">Aprende a identificar riesgos, aprovechar oportunidades y tomar mejores decisiones en tu proceso — todo basado en los procedimientos internos de PBI SAS ESP y Nikoil Energy.</p>
+    <div class="meta-grid">
+      <div class="meta-card"><div class="meta-icon">⏱️</div><div class="meta-lbl">Duración</div><div class="meta-val">1 hora</div></div>
+      <div class="meta-card"><div class="meta-icon">🎯</div><div class="meta-lbl">Para aprobar</div><div class="meta-val">≥ 80% (8/10)</div></div>
+      <div class="meta-card"><div class="meta-icon">📜</div><div class="meta-lbl">Certificado</div><div class="meta-val">PDF + correo automático</div></div>
+    </div>
+    <div class="input-row">
+      <div class="fg"><label>Nombre completo</label><input class="inp" id="inp-name" type="text" placeholder="Ej: Juan Rodríguez"/></div>
+      <div class="fg"><label>Cargo</label><input class="inp" id="inp-cargo" type="text" placeholder="Ej: Líder HSEQ"/></div>
+    </div>
+    <div class="fg" style="margin-bottom:4px"><label>Correo electrónico</label><input class="inp" id="inp-email" type="email" placeholder="tucorreo@empresa.com"/></div>
+    <div class="video-intro">
+    <div class="video-intro-label">🎬 Video introductorio — míralo antes de comenzar</div>
+    <div class="video-wrapper">
+      <iframe
+        src="https://www.youtube.com/embed/8Zov8ecsRM8"
+        title="Introducción Gestión de Riesgos y Oportunidades SIG"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        style="width:100%;height:100%;border-radius:10px">
+      </iframe>
+    </div>
+  </div>
+  <button class="btn-start" onclick="startApp()">Iniciar capacitación →</button>
+  </div>
+  <div class="obj-card">
+    <div class="obj-title">🎓 ¿Qué aprenderás?</div>
+    <div class="obj-grid">
+      <div class="obj-item"><div class="obj-dot"></div><span>Entender qué es un riesgo y cómo medirlo en tu trabajo diario</span></div>
+      <div class="obj-item"><div class="obj-dot"></div><span>Reconocer las <strong>oportunidades</strong> que el SIG te pide aprovechar</span></div>
+      <div class="obj-item"><div class="obj-dot"></div><span>Usar la DOFA como herramienta práctica de tu proceso</span></div>
+      <div class="obj-item"><div class="obj-dot"></div><span>Saber qué hacer cuando algo sale mal (acción correctiva) o podría salir mal (preventiva)</span></div>
+      <div class="obj-item"><div class="obj-dot"></div><span>Leer e interpretar la Matriz de Riesgos sin necesidad de ser experto</span></div>
+      <div class="obj-item"><div class="obj-dot"></div><span>Conocer qué formatos usar y cuándo usarlos</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S1: MÓDULO 1 — Marco Normativo ══ -->
+<div class="screen" id="s1">
+  <div class="mod-header">
+    <div class="mod-num-box">01</div>
+    <div class="mod-info"><div class="mod-badge">Módulo 1 de 5</div><div class="mod-title-text">¿Por qué existe el SIG?</div><div class="mod-code-text">ISO 9001 · ISO 14001 · ISO 45001 · NORSOK SWA 006</div></div>
+  </div>
+
+  <div class="dyk"><div class="dyk-icon">🤔</div><div class="dyk-text"><strong>Antes de empezar, una pregunta:</strong> ¿Alguna vez has visto en tu trabajo algo que podría salir mal y nadie lo ha documentado? ¿O una idea que mejoraría el proceso pero se queda en conversación de pasillo? — El SIG existe exactamente para eso: para que esos riesgos e ideas no se pierdan.</div></div>
+
+  <div class="ex-box">
+    <div class="ex-title">🛢️ Por qué esto importa en Oil &amp; Gas</div>
+    <div class="ex-text">Un derrame de solo <strong>1 barril de petróleo</strong> en Colombia puede costar entre <strong>$15.000 y $50.000 USD</strong> en remediación ambiental — sin contar sanciones, daño a la imagen y posible cierre de operaciones. La gestión de riesgos no es un requisito de papel: es lo que separa una operación sostenible de una crisis.</div>
+  </div>
+
+  <div class="dyk"><div class="dyk-icon">📌</div><div class="dyk-text"><strong>¿Qué es el SIG?</strong> El Sistema Integrado de Gestión (SIG) reúne en un solo sistema tres "reglamentos internacionales" que PBI y Nikoil Energy cumplen: uno de <strong>calidad</strong>, uno de <strong>medio ambiente</strong> y uno de <strong>seguridad del trabajador</strong>. En lugar de tener tres sistemas separados, el SIG los integra para que todo funcione de manera coordinada.</div></div>
+
+  <div class="cc-grid">
+    <div class="cc"><div class="cc-icon">📋</div><div class="cc-title">ISO 9001 — Calidad</div><div class="cc-text"><em>En simple:</em> Garantiza que el servicio que entregamos sea confiable y cumpla lo prometido al cliente.<br><br>En riesgos: ¿Qué puede hacer que entreguemos mal un servicio? ¿Qué oportunidades tenemos para mejorar?</div></div>
+    <div class="cc g"><div class="cc-icon">🌿</div><div class="cc-title">ISO 14001 — Ambiente</div><div class="cc-text"><em>En simple:</em> Cuida que nuestras operaciones no dañen el entorno — suelo, agua, aire, comunidades.<br><br>En riesgos: ¿Qué podría contaminar? ¿Qué normas ambientales debemos cumplir?</div></div>
+    <div class="cc r"><div class="cc-icon">⛑️</div><div class="cc-title">ISO 45001 — Seguridad</div><div class="cc-text"><em>En simple:</em> Protege la vida y salud de cada persona que trabaja en la operación.<br><br>En riesgos: ¿Qué peligros pueden causar un accidente? ¿Cómo los prevenimos?</div></div>
+    <div class="cc a"><div class="cc-icon">🛢️</div><div class="cc-title">NORSOK SWA 006</div><div class="cc-text"><em>En simple:</em> Estándar noruego para el sector petrolero. Dice que cualquier trabajador puede reportar un problema <strong>sin miedo a represalias</strong> — y que el bienestar humano va primero.</div></div>
+  </div>
+
+  <div class="dyk"><div class="dyk-icon">💡</div><div class="dyk-text"><strong>Lo más importante:</strong> Estas cuatro normas no trabajan separadas. Cuando en campo se identifica un riesgo de fuga de gas, eso afecta al mismo tiempo la <strong>seguridad de las personas</strong> (ISO 45001), el <strong>medio ambiente</strong> (ISO 14001) y la <strong>continuidad del servicio</strong> (ISO 9001). Por eso se llama sistema <em>integrado</em> — todo está conectado.</div></div>
+
+  <div class="mini-quiz" id="mq1">
+    <div class="mini-quiz-title">🧠 Verifiquemos</div>
+    <div class="mini-q">En campo detectas un posible derrame de hidrocarburo. ¿Qué normas del SIG se ven afectadas al mismo tiempo?</div>
+    <div class="mini-opts">
+      <button class="mini-opt" onclick="miniQ('mq1',0,1)">Solo ISO 14001, porque es un problema ambiental</button>
+      <button class="mini-opt" onclick="miniQ('mq1',1,1)">ISO 14001 (ambiente), ISO 45001 (seguridad) y posiblemente ISO 9001 (servicio) al mismo tiempo</button>
+      <button class="mini-opt" onclick="miniQ('mq1',2,1)">Solo NORSOK, porque aplica al sector petrolero</button>
+    </div>
+    <div class="mini-fb" id="mq1-fb"></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="go(0)">← Volver</button>
+    <button class="btn btn-teal" onclick="go(2)">Módulo 2: Riesgos →</button>
+  </div>
+</div>
+
+<!-- ══ S2: MÓDULO 2 — Gestión del Riesgo ══ -->
+<div class="screen" id="s2">
+  <div class="mod-header" style="background:rgba(8,145,178,0.1)">
+    <div class="mod-num-box" style="background:#0E7490">02</div>
+    <div class="mod-info"><div class="mod-badge">Módulo 2 de 5</div><div class="mod-title-text">Metodología de Gestión del Riesgo</div><div class="mod-code-text">PRO-GER-01 · Versión 04 · 30/06/2022</div></div>
+  </div>
+
+  <div class="dyk"><div class="dyk-icon">📖</div><div class="dyk-text"><strong>¿Qué es un riesgo, en palabras simples?</strong> Es cualquier cosa que <em>podría salir mal</em> en tu proceso y afectar a las personas, al ambiente, a la calidad del servicio o a la empresa. El procedimiento PRO-GER-01 nos enseña a identificarlos, medirlos y actuar antes de que se conviertan en un problema real.</div></div>
+
+  <div class="ex-box">
+    <div class="ex-title">🛢️ Ejemplo cotidiano antes de los pasos</div>
+    <div class="ex-text">Imagina que en tu área hay una manguera de alta presión con signos de desgaste. Tú lo notas pero nadie lo documenta. Un mes después, revienta y lesiona a un compañero. <strong>Eso es exactamente lo que PRO-GER-01 busca evitar:</strong> que los riesgos que ya vemos no queden en el olvido.</div>
+  </div>
+
+  <div class="steps">
+    <div class="step-row"><div class="step-line"><div class="step-circle">1</div><div class="step-vline"></div></div><div class="step-content"><h5>Primero: entender el entorno</h5><p>Antes de identificar riesgos, la gerencia analiza el panorama completo: ¿qué está pasando en el sector? ¿qué regulaciones cambiaron? ¿cómo estamos internamente? Para esto se usa la herramienta <strong>DOFA</strong> (la veremos en detalle en el Módulo 4).</p><span class="step-resp">👤 Alta Gerencia</span></div></div>
+    <div class="step-row"><div class="step-line"><div class="step-circle">2-4</div><div class="step-vline"></div></div><div class="step-content"><h5>Identificar y nombrar el riesgo claramente</h5><p>Un riesgo bien descrito es más fácil de gestionar. No es lo mismo decir <em>"riesgo de accidente"</em> que decir <em>"riesgo de caída desde altura por falta de línea de vida en trabajos en torres"</em>. El riesgo se clasifica según su naturaleza: operativo, ambiental, financiero, de imagen, etc.</p><span class="step-resp">👤 Líderes de Proceso</span></div></div>
+    <div class="step-row"><div class="step-line"><div class="step-circle">5</div><div class="step-vline"></div></div><div class="step-content"><h5>Medir el riesgo: ¿qué tan probable es y qué tan grave sería?</h5><p>Se califica en dos dimensiones: <strong>¿qué tan probable es que ocurra?</strong> (escala 1 a 5) y <strong>¿qué tan grave sería si ocurre?</strong> (escala 1 a 5). La combinación de los dos números define si el riesgo es bajo, moderado, alto o extremo.</p><span class="step-resp">👤 Líderes de Proceso</span></div></div>
+    <div class="step-row"><div class="step-line"><div class="step-circle">8</div><div class="step-vline"></div></div><div class="step-content"><h5>Decidir qué hacer con el riesgo</h5><p>Hay cuatro opciones según la gravedad: <strong>Asumir</strong> (riesgos bajos, se monitorean) · <strong>Reducir</strong> (aplicar controles para bajarlo) · <strong>Transferir</strong> (ej: contratar un seguro) · <strong>Plan de contingencia</strong> (para riesgos extremos: ¿qué hacemos si ocurre?).</p><span class="step-resp">👤 Líderes de Proceso</span></div></div>
+    <div class="step-row"><div class="step-line"><div class="step-circle">10-12</div><div class="step-vline"></div></div><div class="step-content"><h5>Revisar cada 3 meses: ¿funcionaron los controles?</h5><p>El Comité SIG se reúne trimestralmente para verificar que los controles aplicados realmente redujeron el riesgo. Al riesgo que queda después de aplicar controles se le llama <strong>riesgo residual</strong> — y debe ser aceptable.</p><span class="step-resp">👤 Alta Gerencia · HSEQ · Líderes</span></div></div>
+  </div>
+
+  <div class="ex-box"><div class="ex-title">🛢️ Ejemplo real Oil & Gas</div><div class="ex-text"><strong>Riesgo identificado:</strong> "Fuga de gas natural por corrosión interna en línea de producción"<br><br>→ <strong>Probabilidad:</strong> Posible (3) — ocurrió 1 vez en los últimos 2 años<br>→ <strong>Impacto:</strong> Catastrófico (5) — explosión, víctimas, cierre<br>→ <strong>Zona:</strong> <span style="color:#FCA5A5;font-weight:800">EXTREMA</span> → Plan de Contingencias + inspección preventiva mensual</div></div>
+
+  <h4 style="font-size:12px;font-weight:700;letter-spacing:1px;color:var(--amber);text-transform:uppercase;margin-bottom:6px">La tabla para medir el riesgo — Probabilidad × Impacto</h4>
+  <p style="font-size:13px;color:var(--slate);margin-bottom:11px;line-height:1.6">Busca el número de probabilidad en las filas y el número de impacto en las columnas. Donde se cruzan, esa es la <strong>zona del riesgo</strong>. Los colores te dicen qué tan urgente es actuar.</p>
+  <div class="mx-wrap">
+    <table class="mx-table">
+      <thead><tr><th>Prob ↓ / Impacto →</th><th>Insignif.(1)</th><th>Menor(2)</th><th>Moderado(3)</th><th>Mayor(4)</th><th>Catastrófico(5)</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--slate);font-size:11px;font-weight:700">Raro (1)</td><td class="c-baja">Baja</td><td class="c-baja">Baja</td><td class="c-mod">Moderada</td><td class="c-alta">Alta</td><td class="c-alta">Alta</td></tr>
+        <tr><td style="color:var(--slate);font-size:11px;font-weight:700">Improbable (2)</td><td class="c-baja">Baja</td><td class="c-baja">Baja</td><td class="c-mod">Moderada</td><td class="c-alta">Alta</td><td class="c-ext">Extrema</td></tr>
+        <tr><td style="color:var(--slate);font-size:11px;font-weight:700">Posible (3)</td><td class="c-baja">Baja</td><td class="c-mod">Moderada</td><td class="c-alta">Alta</td><td class="c-ext">Extrema</td><td class="c-ext">Extrema</td></tr>
+        <tr><td style="color:var(--slate);font-size:11px;font-weight:700">Probable (4)</td><td class="c-mod">Moderada</td><td class="c-alta">Alta</td><td class="c-alta">Alta</td><td class="c-ext">Extrema</td><td class="c-ext">Extrema</td></tr>
+        <tr><td style="color:var(--slate);font-size:11px;font-weight:700">Casi Seguro (5)</td><td class="c-alta">Alta</td><td class="c-alta">Alta</td><td class="c-ext">Extrema</td><td class="c-ext">Extrema</td><td class="c-ext">Extrema</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="mini-quiz" id="mq2">
+    <div class="mini-quiz-title">🧠 ¿Cómo lo harías tú?</div>
+    <div class="mini-q">En tu proceso identificas: "Disposición inadecuada de residuos peligrosos que podría generar sanción ambiental". Lo calificas: Probabilidad Probable (4) e Impacto Mayor (4). ¿En qué zona cae y qué debes hacer?</div>
+    <div class="mini-opts">
+      <button class="mini-opt" onclick="miniQ('mq2',0,2)">Zona Alta → Reducir, Evitar, Compartir o Transferir</button>
+      <button class="mini-opt" onclick="miniQ('mq2',1,2)">Zona Extrema → Plan de contingencias</button>
+      <button class="mini-opt" onclick="miniQ('mq2',2,2)">Zona Moderada → Asumir o Reducir</button>
+    </div>
+    <div class="mini-fb" id="mq2-fb"></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="go(1)">← Módulo 1</button>
+    <button class="btn btn-teal" onclick="go(3)">Módulo 3: Oportunidades →</button>
+  </div>
+</div>
+
+<!-- ══ S3: MÓDULO 3 — OPORTUNIDADES (NUEVO) ══ -->
+<div class="screen" id="s3">
+  <div class="mod-header" style="background:rgba(124,58,237,0.1)">
+    <div class="mod-num-box" style="background:#6D28D9">03</div>
+    <div class="mod-info"><div class="mod-badge">Módulo 3 de 5 · ¡Nuevo!</div><div class="mod-title-text">Gestión de Oportunidades en el SIG</div><div class="mod-code-text">ISO 9001/14001/45001 Cláusula 6.1 · PRO-GER-01</div></div>
+  </div>
+
+  <div class="dyk"><div class="dyk-icon">🌟</div><div class="dyk-text"><strong>Las normas ISO no solo piden evitar problemas.</strong> También exigen que busquemos activamente las cosas buenas que podemos aprovechar. A eso se le llama <strong>Oportunidad</strong>: algo del entorno o de nuestro propio trabajo que, si lo capitalizamos bien, nos hace mejores — como empresa, como equipo y como operación.</div></div>
+
+  <div class="compare-grid">
+    <div class="compare-card risk">
+      <h3>⚠️ Riesgo</h3>
+      <p>Efecto <strong>negativo</strong> o incierto que puede afectar objetivos.</p>
+      <ul>
+        <li>Se gestiona para <strong>reducir o evitar</strong></li>
+        <li>Genera controles y planes de contingencia</li>
+        <li>Meta: minimizar la probabilidad o impacto</li>
+      </ul>
+    </div>
+    <div class="compare-card opp">
+      <h3>🚀 Oportunidad</h3>
+      <p>Efecto <strong>positivo</strong> que puede potenciar el cumplimiento de objetivos.</p>
+      <ul>
+        <li>Se gestiona para <strong>capitalizar y aprovechar</strong></li>
+        <li>Genera acciones proactivas de mejora</li>
+        <li>Meta: maximizar la probabilidad de ocurrencia</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="opp-box">
+    <div class="opp-title">🚀 ¿Cómo se identifican oportunidades?</div>
+    <div class="opp-text">Las oportunidades emergen del mismo análisis de contexto (DOFA/MEFE). Una <strong>Fortaleza</strong> + una <strong>Oportunidad externa</strong> puede convertirse en una estrategia de crecimiento. Un <strong>riesgo gestionado exitosamente</strong> puede convertirse en una ventaja competitiva certificable.</div>
+  </div>
+
+  <div class="ex-box">
+    <div class="ex-title">🛢️ Ejemplos reales PBI / Nikoil Energy</div>
+    <div class="ex-text">
+      <strong>Oportunidad 1 — Calidad (ISO 9001):</strong><br>
+      PBI tiene experiencia en inspecciones offshore. Oportunidad: certificar ese conocimiento como servicio diferenciado para nuevos contratos con Ecopetrol.<br><br>
+      <strong>Oportunidad 2 — Ambiente (ISO 14001):</strong><br>
+      Nuevas tecnologías de monitoreo en tiempo real de emisiones. Oportunidad: implementarlas y acceder a financiación verde con tasas preferenciales.<br><br>
+      <strong>Oportunidad 3 — SST (ISO 45001):</strong><br>
+      Cero incidentes en los últimos 12 meses. Oportunidad: certificar el proceso de gestión de SST como benchmark del sector y atraer talento diferenciado.
+    </div>
+  </div>
+
+  <div class="dyk"><div class="dyk-icon">🔄</div><div class="dyk-text"><strong>El ciclo que las normas esperan de nosotros:</strong> Identificamos un riesgo → aplicamos controles → el riesgo no ocurre → documentamos lo que aprendimos → eso se convierte en una <strong>mejora del proceso</strong> que podemos certificar. Así, gestionar bien los riesgos hoy genera oportunidades reales mañana.</div></div>
+
+  <div class="opp-box">
+    <div class="opp-title">📋 ¿Y dónde se escribe la oportunidad para que no se pierda?</div>
+    <div class="opp-text">
+      Una oportunidad que no se documenta, no existe para el SIG. Se registra en:<br><br>
+      • <strong>FOR-GER-06 Matriz DOFA</strong> — aquí quedan las oportunidades del entorno y las estrategias para aprovecharlas<br>
+      • <strong>FOR-GER-05 Matriz de Riesgos Corporativos</strong> — también puede incluir efectos positivos identificados<br>
+      • <strong>FOR-HSEQ-53 Matriz de Acciones para la Mejora</strong> — aquí se hace seguimiento a las acciones concretas para capitalizar la oportunidad<br><br>
+      ¿Quién es responsable? El <strong>Líder de Proceso</strong> lidera el registro, y la <strong>Alta Gerencia</strong> da seguimiento en el Comité SIG cada tres meses.
+    </div>
+  </div>
+
+  <div class="mini-quiz" id="mq3">
+    <div class="mini-quiz-title">🧠 Diferenciando conceptos</div>
+    <div class="mini-q">Nikoil Energy logra cero accidentes por 18 meses consecutivos. Según el enfoque de las normas ISO, esto es principalmente:</div>
+    <div class="mini-opts">
+      <button class="mini-opt" onclick="miniQ('mq3',0,3)">Un riesgo controlado que se debe mantener vigilado</button>
+      <button class="mini-opt" onclick="miniQ('mq3',1,3)">Una oportunidad para capitalizar: certificar el proceso, atraer talento y ganar reputación en el sector</button>
+      <button class="mini-opt" onclick="miniQ('mq3',2,3)">No aplica en el SIG — solo se gestionan eventos negativos</button>
+    </div>
+    <div class="mini-fb" id="mq3-fb"></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="go(2)">← Módulo 2</button>
+    <button class="btn btn-teal" onclick="go(4)">Módulo 4: DOFA →</button>
+  </div>
+</div>
+
+<!-- ══ S4: MÓDULO 4 — DOFA ══ -->
+<div class="screen" id="s4">
+  <div class="mod-header" style="background:rgba(245,158,11,0.08)">
+    <div class="mod-num-box" style="background:#B45309">04</div>
+    <div class="mod-info"><div class="mod-badge">Módulo 4 de 5</div><div class="mod-title-text">DOFA · Acciones Correctivas y Preventivas</div><div class="mod-code-text">INS-GER-01 V.02 · PRO-HSEQ-03 V.07</div></div>
+  </div>
+
+  <div class="dyk"><div class="dyk-icon">🔗</div><div class="dyk-text"><strong>¿Alguna vez has hecho una DOFA y después no pasó nada con ella?</strong> En el SIG eso no puede ocurrir. La DOFA es el punto de partida obligatorio para identificar riesgos y oportunidades. Cada Debilidad y Amenaza que escribas ahí es un riesgo que debe gestionarse. Cada Fortaleza y Oportunidad es algo que podemos aprovechar.</div></div>
+
+  <div class="dofa-wrap">
+    <div class="dofa-cell dofa-D"><h4>⚠️ D · Debilidades</h4><ul><li>Equipos de medición con calibración vencida</li><li>Falta de personal certificado en altura</li><li>Procedimientos desactualizados</li></ul></div>
+    <div class="dofa-cell dofa-F"><h4>✅ F · Fortalezas</h4><ul><li>Certificación ISO vigente (3 sistemas)</li><li>Equipo HSEQ con experiencia Oil & Gas</li><li>Sistema NORSOK implementado</li></ul></div>
+    <div class="dofa-cell dofa-A"><h4>🚨 A · Amenazas</h4><ul><li>Nuevas regulaciones emisiones CO₂</li><li>Fluctuación precio del petróleo</li><li>Aumento de incidentes en el sector</li></ul></div>
+    <div class="dofa-cell dofa-O"><h4>🌟 O · Oportunidades</h4><ul><li>Nuevos contratos con Ecopetrol</li><li>Tecnologías de monitoreo en tiempo real</li><li>Financiación verde para proyectos sostenibles</li></ul></div>
+  </div>
+
+  <div class="dyk"><div class="dyk-icon">⚙️</div><div class="dyk-text"><strong>Cuatro tipos de acción — fácil de recordar:</strong><br><br>
+  🩹 <strong>Corrección:</strong> "Apago el incendio ahora mismo" — solución inmediata, no indaga por qué pasó.<br>
+  🔧 <strong>Acción Correctiva:</strong> "Busco por qué se incendió y lo evito para siempre" — va a la causa raíz.<br>
+  🛡️ <strong>Acción Preventiva:</strong> "Noto que puede incendiarse antes de que pase" — actúo sin esperar el problema.<br>
+  📈 <strong>Acción de Mejora:</strong> "Todo está bien, pero puedo hacerlo mejor" — proactiva, sin necesidad de que haya un problema.</div></div>
+
+  <div class="ex-box">
+    <div class="ex-title">🛢️ Caso real — Auditoría interna</div>
+    <div class="ex-text"><strong>NC detectada:</strong> "No se registran inspecciones de EPP en el formato correspondiente"<br><br><strong>Corrección (inmediata):</strong> Diligenciar los registros pendientes.<br><strong>5 Porqués → Causa raíz:</strong> El líder no sabía que el formato existía.<br><strong>Acción Correctiva:</strong> Capacitar al líder + incluir el formato en la inducción de responsables.</div>
+  </div>
+
+  <h4 style="font-size:12px;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">📂 Los formatos que debes conocer</h4>
+  <p style="font-size:13px;color:var(--slate);margin-bottom:12px;line-height:1.6">Cada acción o hallazgo debe quedar escrito en el formato correcto. No basta con resolverlo — si no está documentado, para el SIG no ocurrió.</p>
+  <div class="reg-grid">
+    <div class="reg-item"><span class="reg-code">FOR-HSEQ-53</span>Matriz de Acciones para la Mejora</div>
+    <div class="reg-item"><span class="reg-code">FOR-HSEQ-54</span>Acción Correctiva, Preventiva o de Mejora</div>
+    <div class="reg-item"><span class="reg-code">FOR-HSEQ-82</span>Tarjeta de Aporte</div>
+    <div class="reg-item"><span class="reg-code">FOR-GER-05</span>Matriz de Riesgos Corporativos</div>
+    <div class="reg-item"><span class="reg-code">FOR-HSEQ-73</span>Planificación de Cambios</div>
+    <div class="reg-item"><span class="reg-code">FOR-HSEQ-38</span>Investigación de Incidentes</div>
+  </div>
+
+  <div class="mini-quiz" id="mq4">
+    <div class="mini-quiz-title">🧠 Situación real</div>
+    <div class="mini-q">Al valorar una acción preventiva propuesta (Ítem 5.1 PRO-HSEQ-03), se determina que el riesgo resultante es MAYOR al actual. ¿Qué se debe hacer?</div>
+    <div class="mini-opts">
+      <button class="mini-opt" onclick="miniQ('mq4',0,4)">Implementarla con supervisión adicional del área HSQ</button>
+      <button class="mini-opt" onclick="miniQ('mq4',1,4)">Considerarla NO viable, reevaluar o descartar definitivamente</button>
+      <button class="mini-opt" onclick="miniQ('mq4',2,4)">Transferir la decisión a la Alta Gerencia</button>
+    </div>
+    <div class="mini-fb" id="mq4-fb"></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="btn btn-ghost" onclick="go(3)">← Módulo 3</button>
+    <button class="btn btn-amber" onclick="go(5)">🎯 Ir a la Evaluación Final →</button>
+  </div>
+</div>
+
+<!-- ══ S5: EVALUACIÓN ══ -->
+<div class="screen" id="s5">
+  <div class="eval-hero">
+    <h2>Evaluación Final</h2>
+    <p>10 preguntas basadas en lo que acabas de estudiar. Puedes cambiar tu respuesta antes de enviar — como en cualquier examen. Cuando estés seguro, presiona <strong>"Enviar evaluación"</strong>.</p>
+    <div class="eval-stats">
+      <div class="eval-stat"><div class="eval-stat-n">10</div><div class="eval-stat-l">Preguntas</div></div>
+      <div class="eval-stat"><div class="eval-stat-n">≥80%</div><div class="eval-stat-l">Para aprobar</div></div>
+      <div class="eval-stat"><div class="eval-stat-n">↺</div><div class="eval-stat-l">Puedes cambiar</div></div>
+    </div>
+  </div>
+  <div id="q-container"></div>
+  <button class="btn-submit" id="btn-submit" onclick="submitEval()" disabled>Enviar evaluación</button>
+</div>
+
+<!-- ══ S6: RESULTADO ══ -->
+<div class="screen" id="s6">
+  <div class="result-center">
+    <div id="ring" class="score-ring"><div id="score-n" class="score-n">—</div><div class="score-lbl">de 10 puntos</div></div>
+    <div id="result-title" class="result-title"></div>
+    <p id="result-msg" class="result-msg"></p>
+    <div id="pass-section" style="display:none">
+      <div class="cert-form-wrap">
+        <h3>🏆 Completa tus datos para recibir el certificado</h3>
+        <div class="form-grid">
+          <div class="fg2"><label>Nombre completo</label><input type="text" id="c-name" placeholder="Tu nombre"/></div>
+          <div class="fg2"><label>N° Identificación</label><input type="text" id="c-cedula" placeholder="Ej: 1057583027"/></div>
+        </div>
+        <div class="form-grid">
+          <div class="fg2"><label>Cargo</label><input type="text" id="c-cargo" placeholder="Tu cargo"/></div>
+          <div class="fg2"><label>Área / Dependencia</label><input type="text" id="c-area" placeholder="Ej: Operaciones, HSEQ..."/></div>
+        </div>
+        <div class="form-grid">
+          <div class="fg2"><label>Empresa</label>
+            <select id="c-empresa"><option value="PBI SAS ESP">PBI SAS ESP</option><option value="Nikoil Energy">Nikoil Energy</option><option value="PBI SAS ESP / Nikoil Energy">PBI SAS ESP / Nikoil Energy</option></select>
+          </div>
+          <div class="fg2"><label>Tu correo electrónico</label><input type="email" id="c-email" placeholder="tucorreo@empresa.com"/></div>
+        </div>
+        <button class="btn-cert" id="btn-cert" onclick="generateAndSend()">
+          <span class="spin" id="cert-spin"></span>
+          <span id="cert-btn-txt">📧 Registrar asistencia y recibir certificado</span>
+        </button>
+        <div class="status-box" id="status-box"></div>
+      </div>
+    </div>
+    <div id="fail-section" style="display:none">
+      <button class="btn-retry" onclick="retryEval()">↺ Volver a intentar</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════
+const HSEQ_EMAILS = ['hmoreno@pbi.com.co','cesteban@pbi.com.co','pamezquita@omegaenergy.co'];
+const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
+
+let uName='', uCargo='', uEmail='';
+let answers = {};      // qId -> selected index (LOCKED once set)
+let answered = {};     // qId -> true (tracks which are done)
+let finalScore = 0;
+
+// ══════════════════════════════════════════
+// MINI QUIZ
+// ══════════════════════════════════════════
+const MQ = {
+  mq1:{c:1,ok:'✅ Correcto. El SIG integrado activa simultáneamente ISO 14001 (ambiente), ISO 45001 (seguridad del personal) e ISO 9001 si se interrumpe el servicio. Esa es la esencia del enfoque integrado.',no:'❌ Un SIG integrado activa las tres normas ante un derrame: ISO 14001 (impacto ambiental), ISO 45001 (riesgo para trabajadores) e ISO 9001 si afecta la prestación del servicio.'},
+  mq2:{c:1,ok:'✅ Probable(4) × Mayor(4) = Zona EXTREMA. La opción de manejo es Plan de Contingencias — acciones de respuesta si el riesgo se materializa.',no:'❌ Probable(4) × Mayor(4) en la matriz PRO-GER-01 = Zona EXTREMA, no Alta. El manejo para Extrema es Plan de Contingencias.'},
+  mq3:{c:1,ok:'✅ Correcto. Las normas ISO 9001/14001/45001 exigen gestionar tanto riesgos como oportunidades. Cero accidentes es una oportunidad de capitalizar logros, fortalecer la reputación y atraer talento.',no:'❌ Las normas ISO exigen gestionar también las oportunidades. Cero accidentes es una oportunidad para certificar el proceso, atraer talento y ganar reputación — no solo un indicador de control.'},
+  mq4:{c:1,ok:'✅ Correcto. PRO-HSEQ-03 Ítem 5.1: si el riesgo de la acción es mayor al actual → NO VIABLE automáticamente. Se reevalúa o descarta. Sin excepciones.',no:'❌ PRO-HSEQ-03 Ítem 5.1: riesgo mayor al actual → NO VIABLE automáticamente. No se implementa con supervisión. Se buscan alternativas o se descarta.'}
+};
+
+function miniQ(id, sel, qNum) {
+  const d = MQ[id];
+  const wrap = document.getElementById(id);
+  const opts = wrap.querySelectorAll('.mini-opt');
+  opts.forEach(o => { o.disabled = true; });
+  const ok = sel === d.c;
+  opts[sel].classList.add(ok ? 'win' : 'fail');
+  opts[d.c].classList.add('win');
+  const fb = document.getElementById(id+'-fb');
+  fb.textContent = ok ? d.ok : d.no;
+  fb.className = 'mini-fb show ' + (ok ? 'ok' : 'no');
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function go(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  document.getElementById('s'+n).classList.add('on');
+  document.getElementById('pbar').style.width = (n/6*100)+'%';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function startApp() {
+  uName  = document.getElementById('inp-name').value.trim();
+  uCargo = document.getElementById('inp-cargo').value.trim();
+  uEmail = document.getElementById('inp-email').value.trim();
+  go(1);
+}
+
+// ══════════════════════════════════════════
+// QUESTIONS DATA
+// ══════════════════════════════════════════
+const Q = [
+  {id:1,ref:'PRO-GER-01 — Ítem 1',
+   text:'Según PRO-GER-01, ¿qué herramienta se utiliza para determinar el contexto de la organización como punto de partida para la identificación de riesgos y oportunidades?',
+   opts:['FOR-GER-05 Matriz de Riesgos Corporativos','INS-GER-01 Metodología DOFA e INS-GER-03 Metodología MEFE','FOR-HSEQ-53 Matriz de Acciones para la Mejora','FOR-HSEQ-54 Acción Correctiva, Preventiva o de Mejora'],
+   c:1,ok:'✅ Correcto. El Ítem 1 del PRO-GER-01 indica que la Alta Gerencia usa el INS-GER-01 (DOFA) e INS-GER-03 (MEFE) para identificar cuestiones internas y externas pertinentes para el contexto estratégico, fuente tanto de riesgos como de oportunidades.',
+   no:'❌ Según PRO-GER-01 Ítem 1, la herramienta para el contexto es el INS-GER-01 DOFA e INS-GER-03 MEFE, lideradas por la Alta Gerencia. Son la entrada para identificar tanto riesgos como oportunidades.'},
+
+  {id:2,ref:'PRO-GER-01 — Anexo A, Tabla de Probabilidad',
+   text:'En la Tabla de Probabilidad del PRO-GER-01, ¿qué nivel corresponde a "Casi Seguro" y cuál es su criterio de frecuencia?',
+   opts:['Nivel 4 — Al menos 1 vez en el último año','Nivel 5 — Más de 1 vez al año','Nivel 3 — Al menos 1 vez en los últimos 2 años','Nivel 5 — Al menos 1 vez en los últimos 5 años'],
+   c:1,ok:'✅ Exacto. Nivel 5 — Casi Seguro: se espera que el evento ocurra en la mayoría de las circunstancias, frecuencia mayor a 1 vez al año.',
+   no:'❌ El Nivel 5 — Casi Seguro corresponde a frecuencia >1 vez al año. Nivel 4 — Probable es al menos 1 vez en el último año. Son niveles distintos.'},
+
+  {id:3,ref:'ISO 9001/14001/45001 Cláusula 6.1 · PRO-GER-01',
+   text:'Las normas ISO 9001, 14001 y 45001 en su Cláusula 6.1 exigen que la organización determine y gestione:',
+   opts:['Solo los riesgos que afectan negativamente los objetivos','Los riesgos Y las oportunidades para abordar los objetivos del SIG','Solo las oportunidades de negocio identificadas por la Alta Gerencia','Únicamente las no conformidades detectadas en auditorías'],
+   c:1,ok:'✅ Correcto. Las tres normas ISO exigen explícitamente gestionar tanto riesgos (efectos negativos) como oportunidades (efectos positivos potenciales). Un SIG que solo gestiona riesgos está incompleto.',
+   no:'❌ La Cláusula 6.1 de ISO 9001, 14001 y 45001 es clara: se deben determinar y gestionar TANTO los riesgos como las oportunidades. Ignorar las oportunidades es incumplir el requisito.'},
+
+  {id:4,ref:'INS-GER-01 — Sección 3, Definiciones',
+   text:'En la Metodología DOFA (INS-GER-01), las Oportunidades y Amenazas pertenecen al Análisis Externo. ¿Qué representa una "Oportunidad" según INS-GER-01?',
+   opts:['Características internas del negocio que impulsan el cumplimiento de metas','Acontecimientos o características externas que pueden usarse a favor del crecimiento de la empresa','Aspectos internos que frenan el cumplimiento de objetivos','Eventos externos incontrolables que afectan negativamente a la organización'],
+   c:1,ok:'✅ Correcto. Según INS-GER-01, Oportunidad = acontecimiento o característica externa que puede ser utilizada a favor del empresario para garantizar el crecimiento. Es externa y positiva.',
+   no:'❌ INS-GER-01 define Oportunidad como acontecimiento o característica EXTERNA que puede usarse a favor para garantizar el crecimiento. No es interna ni negativa.'},
+
+  {id:5,ref:'PRO-HSEQ-03 — Sección 3, Definiciones',
+   text:'¿Cuál es la diferencia fundamental entre "Acción Correctiva" y "Corrección" según PRO-HSEQ-03?',
+   opts:['No hay diferencia; son términos equivalentes','La Corrección elimina la causa raíz; la Acción Correctiva es inmediata','La Acción Correctiva elimina la causa raíz para prevenir repetición; la Corrección solo elimina la NC detectada','La Corrección aplica solo para no conformidades de auditorías externas'],
+   c:2,ok:'✅ Perfecto. Acción Correctiva = ataca la CAUSA raíz para prevenir que la NC se repita. Corrección = elimina la NC que ya ocurrió de forma inmediata, sin necesariamente tratar su causa.',
+   no:'❌ PRO-HSEQ-03 distingue claramente: Acción Correctiva = elimina la CAUSA para que no se repita. Corrección = acción inmediata para eliminar la NC detectada (no necesariamente llega a la causa raíz).'},
+
+  {id:6,ref:'PRO-HSEQ-03 — Sección 5, Ítem 2',
+   text:'¿En qué formato se registran TODAS las acciones (correctivas, preventivas y de mejora) del SIG según PRO-HSEQ-03?',
+   opts:['FOR-HSEQ-54 Acción Correctiva, Preventiva o de Mejora','FOR-HSEQ-53 Matriz de Acciones para la Mejora','FOR-GER-05 Matriz de Riesgos Corporativos','FOR-HSEQ-82 Tarjeta de Aporte'],
+   c:1,ok:'✅ Correcto. El FOR-HSEQ-53 es el repositorio central de TODAS las acciones del SIG. El FOR-HSEQ-54 se usa para NC de auditorías y quejas, pero también se trasladan al 53.',
+   no:'❌ El FOR-HSEQ-53 MATRIZ DE ACCIONES PARA LA MEJORA es donde van TODAS las acciones. Es el formato maestro de seguimiento del SIG.'},
+
+  {id:7,ref:'PRO-GER-01 Ítem 11 · PRO-HSEQ-03 Ítem 6',
+   text:'¿Cuándo se considera eficaz una acción bajo el criterio de "Estadística"?',
+   opts:['Cuando existe un certificado externo de cumplimiento','Cuando se evidencia cambio comportamental del equipo','Cuando está relacionada al cumplimiento de un objetivo/meta a través de un indicador','Cuando el Líder de Proceso la aprueba formalmente'],
+   c:2,ok:'✅ Exacto. Criterio Estadística = la acción es eficaz si se demuestra el cumplimiento de un objetivo o meta mediante un indicador cuantificable (ej: reducción del 30% en incidentes en 6 meses).',
+   no:'❌ Los tres criterios son: Aprendizaje (certificado/soporte), Estadística (indicador de objetivo/meta), Comportamiento (cambio conductual evidenciable). "Estadística" requiere un indicador medible.'},
+
+  {id:8,ref:'PRO-HSEQ-03 — Ítem 5.1',
+   text:'Al valorar una acción propuesta (Ítem 5.1 PRO-HSEQ-03), se determina que el riesgo resultante es MAYOR al actual. ¿Qué establece el procedimiento?',
+   opts:['Se implementa con supervisión adicional de HSQ','Se considera automáticamente NO VIABLE; se debe reevaluar o descartar definitivamente','Se traslada la decisión a la Alta Gerencia','Se documenta en FOR-HSEQ-73 para planificación futura'],
+   c:1,ok:'✅ Correcto. PRO-HSEQ-03 Ítem 5.1: cuando el riesgo de la acción es mayor al actual → NO VIABLE automáticamente. Se reevalúa buscando alternativas o se descarta. Sin excepciones.',
+   no:'❌ PRO-HSEQ-03 Ítem 5.1 es explícito: riesgo mayor al actual → NO VIABLE automáticamente. No se implementa bajo ninguna circunstancia. Se buscan nuevas acciones o se descarta.'},
+
+  {id:9,ref:'INS-GER-01 — Ítems 1 y 6',
+   text:'Según INS-GER-01, ¿con qué frecuencia mínima se actualiza la Matriz DOFA y quién realiza el seguimiento a sus estrategias?',
+   opts:['Semestralmente, por el área HSEQ de forma autónoma','Mínimo una vez al año; seguimiento por Comité SIG de forma trimestral','Mensualmente, por la Alta Gerencia','Cada vez que ocurra un incidente, por el Líder de Proceso afectado'],
+   c:1,ok:'✅ Correcto. INS-GER-01: actualización mínimo anual. Seguimiento trimestral por el Comité SIG, registrando en el FOR-HSEQ-53 Matriz de Acciones para la Mejora.',
+   no:'❌ INS-GER-01 establece: actualización DOFA mínimo 1 vez al año. Seguimiento de estrategias por Comité SIG Trimestral con registro en FOR-HSEQ-53.'},
+
+  {id:10,ref:'PRO-GER-01 — Ítem 10, Responsabilidades',
+   text:'Como Líder de Proceso, según PRO-GER-01 Ítem 10, tus responsabilidades en gestión de riesgos son:',
+   opts:['Solo reportar riesgos identificados al área HSQ','Proponer ajustes, mantener actualizada la matriz, implementar controles, verificar efectividad y socializar','Únicamente participar en la Revisión Gerencial anual','Administrar el presupuesto de acciones correctivas del área'],
+   c:1,ok:'✅ Correcto. El Líder tiene responsabilidad ACTIVA: proponer ajustes, actualizar la matriz de su proceso, implementar controles, verificar efectividad y velar por documentación y socialización.',
+   no:'❌ PRO-GER-01 Ítem 10: el Líder NO solo reporta. Tiene responsabilidad completa: proponer ajustes, actualizar matriz, implementar controles, verificar efectividad, documentar y socializar.'}
+];
+
+// ══════════════════════════════════════════
+// BUILD EVALUATION
+// ══════════════════════════════════════════
+function buildEval() {
+  const c = document.getElementById('q-container');
+  c.innerHTML = '';
+  Q.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'qcard';
+    div.setAttribute('data-n', 'Pregunta '+(i+1));
+    div.innerHTML = `
+      <span class="q-ref">📎 ${q.ref}</span>
+      <div class="q-text">${q.text}</div>
+      <div class="opts" id="opts-${q.id}">
+        ${q.opts.map((o,oi) => `
+          <button class="opt" id="opt-${q.id}-${oi}" onclick="pickOpt(${q.id},${oi})">
+            <div class="opt-circle"></div><span>${o}</span>
+          </button>`).join('')}
+      </div>
+      <div class="q-feedback" id="fb-${q.id}"></div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+// ══════════════════════════════════════════
+// PICK OPTION — puede cambiar antes de enviar
+// ══════════════════════════════════════════
+function pickOpt(qId, sel) {
+  // Si ya fue bloqueada (post-submit), ignorar
+  if (answered[qId]) return;
+
+  // Guardar selección (reemplaza la anterior si existía)
+  answers[qId] = sel;
+
+  // Limpiar selección visual anterior en esta pregunta
+  document.querySelectorAll(`#opts-${qId} .opt`).forEach(o => o.classList.remove('sel'));
+
+  // Marcar la nueva opción seleccionada
+  document.getElementById(`opt-${qId}-${sel}`).classList.add('sel');
+
+  // Habilitar envío cuando todas las preguntas tengan al menos una selección
+  if (Object.keys(answers).length === Q.length) {
+    document.getElementById('btn-submit').disabled = false;
+    document.getElementById('btn-submit').textContent = '✅ Enviar evaluación';
+  }
+}
+
+// ══════════════════════════════════════════
+// SUBMIT EVAL
+// ══════════════════════════════════════════
+function submitEval() {
+  let score = 0;
+  Q.forEach(q => {
+    const sel = answers[q.id];
+    const ok  = sel === q.c;
+    if (ok) score++;
+
+    // Show correct / incorrect styling
+    document.querySelectorAll(`#opts-${q.id} .opt`).forEach((o, i) => {
+      if (i === q.c)       o.classList.add('ok');
+      else if (i === sel)  o.classList.add('bad');
+    });
+
+    // Show feedback
+    const fb = document.getElementById('fb-'+q.id);
+    fb.textContent = ok ? q.ok : q.no;
+    fb.className = 'q-feedback show ' + (ok ? 'ok' : 'bad');
+  });
+
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('btn-submit').textContent = '✓ Evaluación enviada';
+  finalScore = score;
+  setTimeout(() => showResult(score), 1600);
+}
+
+function showResult(score) {
+  go(6);
+  const pct = Math.round(score/Q.length*100);
+  const pass = pct >= 80;
+  const ring = document.getElementById('ring');
+  ring.className = 'score-ring ' + (pass ? 'pass' : 'fail');
+  document.getElementById('score-n').textContent = score+'/'+Q.length;
+  const title = document.getElementById('result-title');
+  title.textContent = pass ? '🏆 ¡Aprobaste!' : 'Sigue intentándolo';
+  title.className = 'result-title ' + (pass ? 'pass' : 'fail');
+  document.getElementById('result-msg').textContent = pass
+    ? `Obtuviste ${score}/10 (${pct}%). Excelente dominio de PRO-GER-01, INS-GER-01 y PRO-HSEQ-03. Completa tus datos para descargar tu certificado y notificar al equipo HSEQ automáticamente.`
+    : `Obtuviste ${score}/10 (${pct}%). Se requiere mínimo 80% (8/10). Revisa los módulos, presta atención a las preguntas que fallaste, y vuelve a intentarlo.`;
+
+  if (pass) {
+    document.getElementById('pass-section').style.display = 'block';
+    if (uName)  document.getElementById('c-name').value  = uName;
+    if (uCargo) document.getElementById('c-cargo').value = uCargo;
+    if (uEmail) document.getElementById('c-email').value = uEmail;
+  } else {
+    document.getElementById('fail-section').style.display = 'block';
+  }
+}
+
+function retryEval() {
+  answers = {}; answered = {};
+  buildEval();
+  document.getElementById('btn-submit').disabled = true;
+  document.getElementById('btn-submit').textContent = 'Enviar evaluación';
+  document.getElementById('fail-section').style.display = 'none';
+  go(5);
+}
+
+// ══════════════════════════════════════════
+// CERTIFICATE PDF
+// ══════════════════════════════════════════
+
+
+// ══════════════════════════════════════════
+// SEND EMAILS via Anthropic API → Gmail MCP
+// ══════════════════════════════════════════
+function buildHseqHtml(name, cargo, empresa, email, score, pct, today) {
+  return `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+  <div style="background:#0B1F3A;padding:24px 28px;border-radius:8px 8px 0 0">
+    <div style="color:#F59E0B;font-weight:800;font-size:13px;letter-spacing:1px">PBI SAS ESP · NIKOIL ENERGY</div>
+    <div style="color:#fff;font-size:22px;font-weight:700;margin-top:4px">Sistema Integrado de Gestión</div>
+    <div style="color:#94A3B8;font-size:12px;margin-top:2px">Notificación de Aprobación — Capacitación HSEQ</div>
+  </div>
+  <div style="background:#fff;padding:28px;border:1px solid #dde8f0">
+    <p style="font-size:15px;color:#1e2d3d;margin-bottom:16px">Estimado equipo HSEQ,</p>
+    <p style="color:#4a5568;font-size:14px;line-height:1.6;margin-bottom:16px">Se registra la siguiente aprobación en la capacitación <strong>"Gestión de Riesgos y Oportunidades en el marco del SIG"</strong>:</p>
+    <div style="background:#f0f7ff;border-left:4px solid #0891B2;border-radius:0 8px 8px 0;padding:18px 20px;margin-bottom:18px">
+      <table style="width:100%;font-size:14px;color:#1e2d3d;border-collapse:collapse">
+        <tr><td style="padding:5px 0;color:#64748B;width:140px">Participante</td><td style="font-weight:700">${name}</td></tr>
+        <tr><td style="padding:5px 0;color:#64748B">Cargo</td><td>${cargo}</td></tr>
+        <tr><td style="padding:5px 0;color:#64748B">Empresa</td><td>${empresa}</td></tr>
+        <tr><td style="padding:5px 0;color:#64748B">Correo</td><td>${email}</td></tr>
+        <tr><td style="padding:5px 0;color:#64748B">Calificación</td><td><strong style="color:#059669">${score}/10 (${pct}%)</strong></td></tr>
+        <tr><td style="padding:5px 0;color:#64748B">Fecha</td><td>${today}</td></tr>
+      </table>
+    </div>
+    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:13px 15px;margin-bottom:18px;font-size:13px;color:#166534">
+      Este registro sirve como evidencia de aprendizaje según los criterios de eficacia del PRO-HSEQ-03.
+    </div>
+    <p style="color:#64748B;font-size:12px">PRO-GER-01 · INS-GER-01 · PRO-HSEQ-03 · ISO 9001 · ISO 14001 · ISO 45001 · NORSOK SWA 006</p>
+  </div>
+  <div style="background:#0B1F3A;padding:13px 28px;border-radius:0 0 8px 8px;text-align:center">
+    <p style="color:#64748B;font-size:11px;margin:0">Sistema de Capacitación SIG · PBI SAS ESP · Nikoil Energy · Dirección HSEQ</p>
+  </div>
+</div>`;
+}
+
+function buildParticipantHtml(name, score, pct, today) {
+  const firstName = name.split(' ')[0];
+  return `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto">
+  <div style="background:#0B1F3A;padding:24px 28px;border-radius:8px 8px 0 0">
+    <div style="color:#F59E0B;font-weight:800;font-size:13px;letter-spacing:1px">PBI SAS ESP · NIKOIL ENERGY</div>
+    <div style="color:#fff;font-size:22px;font-weight:700;margin-top:4px">Felicitaciones, ${firstName}!</div>
+  </div>
+  <div style="background:#fff;padding:28px;border:1px solid #dde8f0">
+    <p style="font-size:15px;color:#1e2d3d;margin-bottom:12px">Has aprobado exitosamente la capacitación:</p>
+    <p style="font-size:15px;font-weight:700;color:#0891B2;margin-bottom:20px">"Gestión de Riesgos y Oportunidades en el marco del SIG"</p>
+    <div style="background:#f0fdf4;border:1px solid #86efac;border-radius:8px;padding:18px;text-align:center;margin-bottom:20px">
+      <div style="font-size:44px;font-weight:900;color:#059669">${score}/10</div>
+      <div style="font-size:15px;color:#166534;font-weight:700">${pct}% — APROBADO</div>
+      <div style="font-size:12px;color:#64748B;margin-top:4px">${today}</div>
+    </div>
+    <p style="color:#4a5568;font-size:14px;line-height:1.6;margin-bottom:12px">Tu certificado PDF fue generado en tu dispositivo. Esta notificación también fue enviada al equipo HSEQ como evidencia de aprendizaje según PRO-HSEQ-03.</p>
+  </div>
+  <div style="background:#0B1F3A;padding:13px 28px;border-radius:0 0 8px 8px;text-align:center">
+    <p style="color:#64748B;font-size:11px;margin:0">Dirección HSEQ · PBI SAS ESP · Nikoil Energy</p>
+  </div>
+</div>`;
+}
+
+// ══════════════════════════════════════════
+// GENERATE PDF + SHOW CODE FOR CLAUDE
+// ══════════════════════════════════════════
+// URL del Google Apps Script desplegado (se actualiza después del deploy)
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3aHoEojNHgGABJwJuUSqRna-itgzVoBgZ9teI9XecsO7DZX7vtsbRsCE_ajxHK0m9/exec';
+
+async function registrarEnSheet(datos) {
+  if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PEGAR_URL_DEL_DEPLOY_AQUI') return { ok: false, error: 'URL no configurada' };
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(datos)
+    });
+    return await resp.json();
+  } catch(e) {
+    return { ok: false, error: e.message };
+  }
+}
+
+async function generateAndSend() {
+  const name    = document.getElementById('c-name').value.trim()    || uName   || 'Participante';
+  const cedula  = document.getElementById('c-cedula').value.trim()  || '';
+  const cargo   = document.getElementById('c-cargo').value.trim()   || uCargo  || '';
+  const area    = document.getElementById('c-area').value.trim()    || 'HSEQ';
+  const empresa = document.getElementById('c-empresa').value;
+  const email   = document.getElementById('c-email').value.trim()   || uEmail  || '';
+  const score   = finalScore;
+  const pct     = Math.round(score/10*100);
+  const today   = new Date().toLocaleDateString('es-CO',{year:'numeric',month:'long',day:'numeric'});
+
+  const status  = document.getElementById('status-box');
+  const btnTxt  = document.getElementById('cert-btn-txt');
+  const btn     = document.getElementById('btn-cert');
+  const spin    = document.getElementById('cert-spin');
+
+  // Registrar en Google Sheet
+  btn.disabled = true;
+  spin.classList.add('on');
+  btnTxt.textContent = 'Registrando asistencia...';
+  status.className = 'status-box show loading';
+  status.textContent = '⏳ Registrando en el control de asistencias...';
+
+  const datos = { nombre: name, identificacion: cedula, correo: email, cargo, area, empresa, calificacion: score, porcentaje: pct };
+  const result = await registrarEnSheet(datos);
+
+  spin.classList.remove('on');
+  btn.disabled = false;
+
+  if (result.ok) {
+    btnTxt.textContent = '✅ Listo — volver a descargar';
+    status.className = 'status-box show ok';
+    status.innerHTML =
+      '<strong>✅ ¡Todo listo!</strong><br><br>' +
+      '📋 Tu asistencia quedó registrada en el <strong>FOR-GH-06</strong>.<br>' +
+      '📧 Tu certificado fue enviado a <strong>' + email + '</strong> con copia al equipo HSEQ.';
+  } else {
+    // Si el script no está configurado aún, mostrar solo el código de correo
+    btnTxt.textContent = '⬇ Volver a descargar PDF';
+    status.className = 'status-box show ok';
+    const sinScript = !APPS_SCRIPT_URL || APPS_SCRIPT_URL === 'PEGAR_URL_DEL_DEPLOY_AQUI';
+    status.innerHTML =
+      '<strong>✅ Certificado PDF descargado.</strong><br><br>' +
+      (sinScript
+        ? '⚙️ <em>El registro automático estará disponible una vez se configure el Apps Script.</em><br><br>'
+        : '⚠️ No se pudo registrar en el Sheet automáticamente. Verifica la conexión.<br><br>') +
+      'Para notificar al equipo HSEQ, copia este código y pégalo en el chat de Claude:<br><br>' +
+      '⚠️ Hubo un problema al registrar. Por favor comunícate con el equipo HSEQ.';
+  }
+}
+
+
+
+function fallbackCopy(text) {
+  var ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  document.execCommand('copy'); document.body.removeChild(ta);
+  document.getElementById('copy-ok').style.display = 'block';
+}
+
+// ══════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════
+buildEval();
+</script>
+</body>
+</html>
