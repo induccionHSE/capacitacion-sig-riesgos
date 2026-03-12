@@ -283,6 +283,65 @@ h1.ct em{font-style:italic;color:var(--amber)}
     top: 0; left: 0;
     width: 100%; height: 100%;
   }
+
+  /* ── CASO TRANSVERSAL ── */
+  .caso-banner {
+    background: linear-gradient(135deg, rgba(180,83,9,0.12), rgba(245,158,11,0.08));
+    border-left: 4px solid var(--amber);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin: 16px 0 20px 0;
+  }
+  .caso-tag {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--amber);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .caso-texto {
+    font-size: 13px;
+    color: var(--slate);
+    line-height: 1.65;
+  }
+
+  /* ── FLUJO DE FORMATOS ── */
+  .formato-flujo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .formato-paso {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .formato-icono {
+    font-size: 20px;
+    min-width: 28px;
+    text-align: center;
+    margin-top: 2px;
+  }
+  .formato-info {
+    flex: 1;
+  }
+  .formato-cuando {
+    font-size: 13px;
+    color: var(--slate);
+    line-height: 1.5;
+    margin-bottom: 4px;
+  }
+  .formato-usa {
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -355,6 +414,12 @@ h1.ct em{font-style:italic;color:var(--amber)}
     <div class="mod-info"><div class="mod-badge">Módulo 1 de 5</div><div class="mod-title-text">¿Por qué existe el SIG?</div><div class="mod-code-text">ISO 9001 · ISO 14001 · ISO 45001 · NORSOK SWA 006</div></div>
   </div>
 
+
+
+  <div class="caso-banner">
+    <div class="caso-tag">🔩 CASO TRANSVERSAL · Válvula V-304</div>
+    <div class="caso-texto">Durante este módulo conocerás <strong>por qué el SIG existe</strong>. En los próximos módulos seguiremos un caso real: la <strong>válvula V-304 de una línea de inyección en campo Nikoil</strong> muestra señales de desgaste. ¿Cómo responde el SIG ante esto? Lo verás paso a paso.</div>
+  </div>
   <div class="dyk"><div class="dyk-icon">🤔</div><div class="dyk-text"><strong>Antes de empezar, una pregunta:</strong> ¿Alguna vez has visto en tu trabajo algo que podría salir mal y nadie lo ha documentado? ¿O una idea que mejoraría el proceso pero se queda en conversación de pasillo? — El SIG existe exactamente para eso: para que esos riesgos e ideas no se pierdan.</div></div>
 
   <div class="ex-box">
@@ -397,6 +462,15 @@ h1.ct em{font-style:italic;color:var(--amber)}
     <div class="mod-info"><div class="mod-badge">Módulo 2 de 5</div><div class="mod-title-text">Metodología de Gestión del Riesgo</div><div class="mod-code-text">PRO-GER-01 · Versión 04 · 30/06/2022</div></div>
   </div>
 
+
+
+  <div class="caso-banner">
+    <div class="caso-tag">🔩 CASO TRANSVERSAL · Válvula V-304 — Paso 2: Medir el riesgo</div>
+    <div class="caso-texto"><strong>La situación:</strong> El técnico reporta que la válvula V-304 tiene desgaste visible en el sello. Aplicando la matriz del PRO-GER-01:<br><br>
+    • <strong>Probabilidad:</strong> 3 — Es probable que falle en los próximos 30 días<br>
+    • <strong>Impacto:</strong> 4 — Una falla causaría derrame, parada de operación y posible lesión<br>
+    • <strong>Valoración:</strong> 3×4 = <strong>12 → Riesgo ALTO 🔴</strong> — Requiere acción inmediata.</div>
+  </div>
   <div class="dyk"><div class="dyk-icon">📖</div><div class="dyk-text"><strong>¿Qué es un riesgo, en palabras simples?</strong> Es cualquier cosa que <em>podría salir mal</em> en tu proceso y afectar a las personas, al ambiente, a la calidad del servicio o a la empresa. El procedimiento PRO-GER-01 nos enseña a identificarlos, medirlos y actuar antes de que se conviertan en un problema real.</div></div>
 
   <div class="ex-box">
@@ -453,6 +527,12 @@ h1.ct em{font-style:italic;color:var(--amber)}
     <div class="mod-info"><div class="mod-badge">Módulo 3 de 5 · ¡Nuevo!</div><div class="mod-title-text">Gestión de Oportunidades en el SIG</div><div class="mod-code-text">ISO 9001/14001/45001 Cláusula 6.1 · PRO-GER-01</div></div>
   </div>
 
+
+
+  <div class="caso-banner">
+    <div class="caso-tag">🔩 CASO TRANSVERSAL · Válvula V-304 — Paso 3: La oportunidad</div>
+    <div class="caso-texto"><strong>El giro positivo:</strong> Al analizar la V-304, el equipo descubre que <em>todas</em> las válvulas de esa línea tienen el mismo modelo antiguo. Esto abre una <strong>oportunidad</strong>: negociar con el proveedor el reemplazo preventivo de toda la línea con tecnología de sello mejorado — reduciendo el riesgo en el 80% de los puntos críticos y generando un ahorro proyectado de $45.000 USD en mantenimiento correctivo.</div>
+  </div>
   <div class="dyk"><div class="dyk-icon">🌟</div><div class="dyk-text"><strong>Las normas ISO no solo piden evitar problemas.</strong> También exigen que busquemos activamente las cosas buenas que podemos aprovechar. A eso se le llama <strong>Oportunidad</strong>: algo del entorno o de nuestro propio trabajo que, si lo capitalizamos bien, nos hace mejores — como empresa, como equipo y como operación.</div></div>
 
   <div class="compare-grid">
@@ -530,6 +610,12 @@ h1.ct em{font-style:italic;color:var(--amber)}
     <div class="mod-info"><div class="mod-badge">Módulo 4 de 5</div><div class="mod-title-text">DOFA · Acciones Correctivas y Preventivas</div><div class="mod-code-text">INS-GER-01 V.02 · PRO-HSEQ-03 V.07</div></div>
   </div>
 
+
+
+  <div class="caso-banner">
+    <div class="caso-tag">🔩 CASO TRANSVERSAL · Válvula V-304 — Paso 4: Documentar</div>
+    <div class="caso-texto"><strong>Cerrando el ciclo:</strong> El equipo ahora debe documentar todo lo ocurrido con la V-304 usando los formatos correctos del SIG — así queda evidencia para auditorías y el conocimiento no se pierde si cambia el personal. Justo eso aprenderás en este módulo.</div>
+  </div>
   <div class="dyk"><div class="dyk-icon">🔗</div><div class="dyk-text"><strong>¿Alguna vez has hecho una DOFA y después no pasó nada con ella?</strong> En el SIG eso no puede ocurrir. La DOFA es el punto de partida obligatorio para identificar riesgos y oportunidades. Cada Debilidad y Amenaza que escribas ahí es un riesgo que debe gestionarse. Cada Fortaleza y Oportunidad es algo que podemos aprovechar.</div></div>
 
   <div class="dofa-wrap">
@@ -550,15 +636,51 @@ h1.ct em{font-style:italic;color:var(--amber)}
     <div class="ex-text"><strong>NC detectada:</strong> "No se registran inspecciones de EPP en el formato correspondiente"<br><br><strong>Corrección (inmediata):</strong> Diligenciar los registros pendientes.<br><strong>5 Porqués → Causa raíz:</strong> El líder no sabía que el formato existía.<br><strong>Acción Correctiva:</strong> Capacitar al líder + incluir el formato en la inducción de responsables.</div>
   </div>
 
-  <h4 style="font-size:12px;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">📂 Los formatos que debes conocer</h4>
-  <p style="font-size:13px;color:var(--slate);margin-bottom:12px;line-height:1.6">Cada acción o hallazgo debe quedar escrito en el formato correcto. No basta con resolverlo — si no está documentado, para el SIG no ocurrió.</p>
-  <div class="reg-grid">
-    <div class="reg-item"><span class="reg-code">FOR-HSEQ-53</span>Matriz de Acciones para la Mejora</div>
-    <div class="reg-item"><span class="reg-code">FOR-HSEQ-54</span>Acción Correctiva, Preventiva o de Mejora</div>
-    <div class="reg-item"><span class="reg-code">FOR-HSEQ-82</span>Tarjeta de Aporte</div>
-    <div class="reg-item"><span class="reg-code">FOR-GER-05</span>Matriz de Riesgos Corporativos</div>
-    <div class="reg-item"><span class="reg-code">FOR-HSEQ-73</span>Planificación de Cambios</div>
-    <div class="reg-item"><span class="reg-code">FOR-HSEQ-38</span>Investigación de Incidentes</div>
+  <h4 style="font-size:12px;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">📂 ¿Qué formato uso según la situación?</h4>
+  <p style="font-size:13px;color:var(--slate);margin-bottom:14px;line-height:1.6">No basta con resolver el problema — <strong>si no está documentado, para el SIG no ocurrió.</strong> Usa el formato que corresponde a cada momento del proceso:</p>
+  <div class="formato-flujo">
+    <div class="formato-paso">
+      <div class="formato-icono">👀</div>
+      <div class="formato-info">
+        <div class="formato-cuando">Cuando <strong>identificas un riesgo</strong> en tu proceso</div>
+        <div class="formato-usa">→ Usa <span class="reg-code">FOR-GER-05</span> Matriz de Riesgos Corporativos</div>
+      </div>
+    </div>
+    <div class="formato-paso">
+      <div class="formato-icono">🚨</div>
+      <div class="formato-info">
+        <div class="formato-cuando">Cuando <strong>ocurre un incidente</strong> o no conformidad</div>
+        <div class="formato-usa">→ Usa <span class="reg-code">FOR-HSEQ-38</span> Investigación de Incidentes</div>
+      </div>
+    </div>
+    <div class="formato-paso">
+      <div class="formato-icono">🔧</div>
+      <div class="formato-info">
+        <div class="formato-cuando">Cuando defines una <strong>acción correctiva, preventiva o de mejora</strong></div>
+        <div class="formato-usa">→ Usa <span class="reg-code">FOR-HSEQ-54</span> Acción Correctiva, Preventiva o de Mejora</div>
+      </div>
+    </div>
+    <div class="formato-paso">
+      <div class="formato-icono">📊</div>
+      <div class="formato-info">
+        <div class="formato-cuando">Para hacer <strong>seguimiento</strong> a todas las acciones abiertas</div>
+        <div class="formato-usa">→ Usa <span class="reg-code">FOR-HSEQ-53</span> Matriz de Acciones para la Mejora</div>
+      </div>
+    </div>
+    <div class="formato-paso">
+      <div class="formato-icono">💡</div>
+      <div class="formato-info">
+        <div class="formato-cuando">Cuando tienes una <strong>idea o sugerencia de mejora</strong></div>
+        <div class="formato-usa">→ Usa <span class="reg-code">FOR-HSEQ-82</span> Tarjeta de Aporte</div>
+      </div>
+    </div>
+    <div class="formato-paso">
+      <div class="formato-icono">🔄</div>
+      <div class="formato-info">
+        <div class="formato-cuando">Cuando vas a hacer un <strong>cambio planificado</strong> en el proceso</div>
+        <div class="formato-usa">→ Usa <span class="reg-code">FOR-HSEQ-73</span> Planificación de Cambios</div>
+      </div>
+    </div>
   </div>
 
   <div class="mini-quiz" id="mq4">
